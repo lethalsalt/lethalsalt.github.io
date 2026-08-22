@@ -26,37 +26,59 @@
       <header class="status">
         <span>CYBERDYNE FEDERAL ATM</span>
         <span id="clock">00:00:00</span>
+        <span class="freq">CODEC 140.85</span>
         <span>LINK: OK</span>
       </header>
 
+      <div class="hud" aria-hidden="true">
+        <div class="bar hp"><span>HP</span><i></i></div>
+        <div class="bar armor"><span>ARM</span><i></i></div>
+        <div class="bar ammo"><span>AMMO</span><i></i></div>
+        <div class="alert">!</div>
+      </div>
+
       <nav class="menu">
-        <a href="#top">F1 ACCOUNT</a>
-        <a href="#player">F2 STATS</a>
-        <a href="#loadout">F3 LOADOUT</a>
-        <a href="#tape">F4 TAPE</a>
-        <a href="#connect">F5 STEAM</a>
+        <a class="f1" href="#top">F1 ACCOUNT</a>
+        <a class="f2" href="#player">F2 STATS</a>
+        <a class="f3" href="#loadout">F3 LOADOUT</a>
+        <a class="f4" href="#tape">F4 TAPE</a>
+        <a class="f5" href="#connect">F5 STEAM</a>
       </nav>
 
       <main id="top">
         <section class="panel hero">
+          <p class="chapter">CHAPTER III — EASY MONEY, HARD ANGLES</p>
           <pre class="banner">PIN IDENTIFICATION PROGRAM
 --------------------------------</pre>
           <p class="line">ACCOUNT ........ LETHAL_SALT</p>
-          <p class="line">PIN ............ <span class="blink">****</span>  AUTHORIZED</p>
+          <p class="line">PIN ............ <span class="blink">****</span>  <span class="ok">AUTHORIZED</span></p>
           <p class="line">TX ............. ARCADE FUND / GALLERIA</p>
           <p class="line">CARD ........... STOLEN? NAH. EARNED.</p>
+
+          <div class="codec">
+            <figure class="codec-face">
+              <img src="assets/portrait.jpg" alt="Codec portrait of Lethal_Salt" />
+              <figcaption>CODEC // SALT</figcaption>
+            </figure>
+            <div class="codec-talk">
+              <p class="codec-id">**** INCOMING ****  FREQ 140.85</p>
+              <p class="codec-line">THIS IS SALT. KEPT YOU WAITING, HUH?</p>
+              <blockquote class="payne">They were all dead. The angles. The jigglers. The GPU. I took a painkiller and queued anyway.</blockquote>
+            </div>
+          </div>
+
           <h1>LETHAL_SALT</h1>
           <p class="tag">I HOLD ANGLES. I DO NOT JIGGLE THEM.<br />IF YOU PEEKED, THAT WAS A CHOICE.</p>
           <ul class="notes">
-            <li>&gt; SOCIAL JUSTICE IS MY PASSION.</li>
-            <li>&gt; COMPETITIVE GAMER.</li>
-            <li>&gt; REAL LIFE WOMAN DEFENDER.</li>
-            <li>&gt; ANTI JIGGLE TECH GURU.</li>
+            <li class="c-green">&gt; SOCIAL JUSTICE IS MY PASSION.</li>
+            <li class="c-yellow">&gt; COMPETITIVE GAMER.</li>
+            <li class="c-orange">&gt; REAL LIFE WOMAN DEFENDER.</li>
+            <li class="c-red">&gt; ANTI JIGGLE TECH GURU.</li>
           </ul>
           <p class="cursor-line">C:\&gt; RUN CS2.EXE<span class="block-cursor"></span></p>
           <p class="actions">
-            <a class="key" href="#loadout">[ ENTER LOADOUT ]</a>
-            <a class="key" href="https://steamcommunity.com/profiles/76561198651917859" target="_blank" rel="noopener">[ DISPENSE STEAM ]</a>
+            <a class="key key-green" href="#loadout">[ ENTER LOADOUT ]</a>
+            <a class="key key-hell" href="https://steamcommunity.com/profiles/76561198651917859" target="_blank" rel="noopener">[ DISPENSE STEAM ]</a>
           </p>
         </section>
 
@@ -135,9 +157,10 @@ LAUNCH         -NOVID -NOJOY -HIGH -FULLSCREEN</pre>
         <section class="panel" id="connect">
           <h2>F5  STEAM.LNK</h2>
           <p>ADD LETHAL_SALT. IF THE REQUEST SAYS LETHAL_SALT AND THE AVATAR IS A HELMETED SALT SHAKER, THAT'S ME.</p>
+          <blockquote class="payne">Shoot dodge into the site. Leave a comment like a bullet hole.</blockquote>
           <p class="actions">
-            <a class="key" href="https://steamcommunity.com/profiles/76561198651917859" target="_blank" rel="noopener">[ OPEN STEAM PROFILE ]</a>
-            <a class="key" href="steam://url/SteamIDPage/76561198651917859">[ STEAM CLIENT ]</a>
+            <a class="key key-green" href="https://steamcommunity.com/profiles/76561198651917859" target="_blank" rel="noopener">[ OPEN STEAM PROFILE ]</a>
+            <a class="key key-hell" href="steam://url/SteamIDPage/76561198651917859">[ STEAM CLIENT ]</a>
           </p>
           <p class="dim">IF THE LINK 404S, SEARCH LETHAL_SALT IN FRIENDS.</p>
         </section>
@@ -146,6 +169,7 @@ LAUNCH         -NOVID -NOJOY -HIGH -FULLSCREEN</pre>
       <footer class="tray">
         <span>ESC EXIT</span>
         <span>NO JIGGLE TECH</span>
+        <span class="ember">RIP &amp; QUEUE</span>
         <span>CASH OUT FOR ARCADE</span>
       </footer>
     </div>
