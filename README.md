@@ -25,9 +25,7 @@ gh api -X POST "repos/{user}/lethalsalt/pages" -f "source[branch]=main" -f "sour
 
 Live URL:
 
-```
-https://<github-username>.github.io/lethalsalt/
-```
+https://lethalsalt.github.io/
 
 ## Stack
 
