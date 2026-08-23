@@ -82,14 +82,10 @@ const theme = {
     const ctx = new (window.AudioContext || window.webkitAudioContext)();
     this.ctx = ctx;
     const master = ctx.createGain();
-    master.gain.value = 0.11;
-    const filter = ctx.createBiquadFilter();
-    filter.type = "lowpass";
-    filter.frequency.value = 2400;
-    master.connect(filter);
-    filter.connect(ctx.destination);
+    master.gain.value = 0.16;
+    master.connect(ctx.destination);
 
-    const drone = (freq, type, gain) => {
+    const buzz = (freq, type, gain) => {
       const o = ctx.createOscillator();
       const g = ctx.createGain();
       o.type = type;
@@ -98,64 +94,104 @@ const theme = {
       o.connect(g);
       g.connect(master);
       o.start();
-      this.nodes.push(o);
+      this.nodes.push(o, g);
     };
-    drone(73.42, "sawtooth", 0.07);
-    drone(110, "square", 0.03);
-    drone(146.83, "sawtooth", 0.04);
-    drone(220, "triangle", 0.02);
+    buzz(73.42, "sawtooth", 0.04);
+    buzz(110, "sawtooth", 0.03);
 
-    const pipe = ctx.createOscillator();
-    const pipeG = ctx.createGain();
-    const lfo = ctx.createOscillator();
-    const lfoG = ctx.createGain();
-    pipe.type = "sawtooth";
-    pipe.frequency.value = 392;
-    lfo.frequency.value = 5.5;
-    lfoG.gain.value = 8;
-    lfo.connect(lfoG);
-    lfoG.connect(pipe.frequency);
-    pipeG.gain.value = 0.035;
-    pipe.connect(pipeG);
-    pipeG.connect(master);
-    pipe.start();
-    lfo.start();
-    this.nodes.push(pipe, lfo);
+    const noiseBuf = ctx.createBuffer(1, ctx.sampleRate * 0.2, ctx.sampleRate);
+    const data = noiseBuf.getChannelData(0);
+    for (let i = 0; i < data.length; i += 1) data[i] = Math.random() * 2 - 1;
 
-    const kick = () => {
+    const noise = (when, dur, gain, hipass) => {
+      const src = ctx.createBufferSource();
+      src.buffer = noiseBuf;
+      const f = ctx.createBiquadFilter();
+      f.type = "highpass";
+      f.frequency.value = hipass;
+      const g = ctx.createGain();
+      g.gain.setValueAtTime(gain, when);
+      g.gain.exponentialRampToValueAtTime(0.001, when + dur);
+      src.connect(f);
+      f.connect(g);
+      g.connect(master);
+      src.start(when);
+      src.stop(when + dur);
+    };
+
+    const eight = (when, startF, endF) => {
       const o = ctx.createOscillator();
       const g = ctx.createGain();
       o.type = "sine";
-      o.frequency.setValueAtTime(90, ctx.currentTime);
-      o.frequency.exponentialRampToValueAtTime(32, ctx.currentTime + 0.18);
-      g.gain.setValueAtTime(0.5, ctx.currentTime);
-      g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.22);
+      o.frequency.setValueAtTime(startF, when);
+      o.frequency.exponentialRampToValueAtTime(endF, when + 0.35);
+      g.gain.setValueAtTime(0.7, when);
+      g.gain.exponentialRampToValueAtTime(0.001, when + 0.55);
       o.connect(g);
       g.connect(master);
-      o.start();
-      o.stop(ctx.currentTime + 0.23);
+      o.start(when);
+      o.stop(when + 0.56);
     };
-    const clang = () => {
+
+    const snare = (when) => {
+      noise(when, 0.16, 0.22, 1800);
       const o = ctx.createOscillator();
       const g = ctx.createGain();
-      o.type = "square";
-      o.frequency.value = 180 + Math.random() * 40;
-      g.gain.setValueAtTime(0.08, ctx.currentTime);
-      g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
+      o.type = "triangle";
+      o.frequency.value = 190;
+      g.gain.setValueAtTime(0.12, when);
+      g.gain.exponentialRampToValueAtTime(0.001, when + 0.12);
       o.connect(g);
       g.connect(master);
-      o.start();
-      o.stop(ctx.currentTime + 0.42);
+      o.start(when);
+      o.stop(when + 0.13);
     };
-    let beat = 0;
-    this.timer = setInterval(() => {
-      if (!this.on) return;
-      kick();
-      if (beat % 4 === 2) clang();
-      beat += 1;
-    }, 520);
+
+    const hat = (when, open) => {
+      noise(when, open ? 0.12 : 0.035, open ? 0.07 : 0.045, open ? 6000 : 9000);
+    };
+
+    const pipe = (when, freq, len) => {
+      const o = ctx.createOscillator();
+      const g = ctx.createGain();
+      const lfo = ctx.createOscillator();
+      const lfoG = ctx.createGain();
+      o.type = "sawtooth";
+      o.frequency.value = freq;
+      lfo.frequency.value = 6;
+      lfoG.gain.value = 7;
+      lfo.connect(lfoG);
+      lfoG.connect(o.frequency);
+      g.gain.setValueAtTime(0.0001, when);
+      g.gain.exponentialRampToValueAtTime(0.045, when + 0.03);
+      g.gain.exponentialRampToValueAtTime(0.0001, when + len);
+      o.connect(g);
+      g.connect(master);
+      o.start(when);
+      lfo.start(when);
+      o.stop(when + len);
+      lfo.stop(when + len);
+    };
+
+    const bpm = 140;
+    const step = 60 / bpm / 4;
+    const melody = [293.66, 349.23, 392, 440, 392, 349.23, 293.66, 220];
+    let i = 0;
+    const schedule = () => {
+      if (!this.on || !this.ctx) return;
+      const t = ctx.currentTime + 0.05;
+      const s = i % 16;
+      hat(t, s === 14);
+      if (s === 0 || s === 3 || s === 8 || s === 11) eight(t, s === 3 || s === 11 ? 55 : 82, 32);
+      if (s === 8) snare(t);
+      if (s === 12) hat(t + step * 0.5, true);
+      if (s % 2 === 0) pipe(t, melody[(Math.floor(i / 2) % melody.length)], step * 2.1);
+      i += 1;
+    };
+    schedule();
+    this.timer = setInterval(schedule, step * 1000);
     this.on = true;
-    if (audioBtn) audioBtn.textContent = "[ AUDIO: ON ]";
+    if (audioBtn) audioBtn.textContent = "[ BRAVE TRAP: ON ]";
   },
   stop() {
     this.on = false;
@@ -164,7 +200,7 @@ const theme = {
     this.nodes = [];
     if (this.ctx) this.ctx.close();
     this.ctx = null;
-    if (audioBtn) audioBtn.textContent = "[ AUDIO: OFF ]";
+    if (audioBtn) audioBtn.textContent = "[ BRAVE TRAP: OFF ]";
   },
   toggle() {
     if (this.on) this.stop();
