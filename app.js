@@ -267,12 +267,31 @@ function mergeWall(a, b) {
 async function loadWall() {
   let remote = [];
   try {
-    const r = await fetch(`comments.json?t=${Date.now()}`, { cache: "no-store" });
+    const r = await fetch("https://api.github.com/repos/lethalsalt/lethalsalt.github.io/issues?state=open&per_page=50", {
+      headers: { Accept: "application/vnd.github+json" },
+    });
     if (r.ok) {
-      const data = await r.json();
-      remote = Array.isArray(data.comments) ? data.comments : [];
+      const issues = await r.json();
+      remote = (Array.isArray(issues) ? issues : [])
+        .filter((i) => /^\[COMMENT\]/i.test(i.title || ""))
+        .map((i) => {
+          const name = String(i.title).replace(/^\[COMMENT\]\s*/i, "").slice(0, 24) || "ANON";
+          return {
+            name,
+            anon: /^ANON/i.test(name),
+            text: String(i.body || "").slice(0, 400),
+            ts: Date.parse(i.created_at) || Date.now(),
+          };
+        });
     }
   } catch (e) { /* offline */ }
+  try {
+    const r2 = await fetch(`comments.json?t=${Date.now()}`, { cache: "no-store" });
+    if (r2.ok) {
+      const data = await r2.json();
+      remote = mergeWall(remote, Array.isArray(data.comments) ? data.comments : []);
+    }
+  } catch (e) { /* ignore */ }
   renderWall(mergeWall(remote, readLocal()));
 }
 
