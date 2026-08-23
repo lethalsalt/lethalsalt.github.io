@@ -44,6 +44,7 @@
         <a class="f4" href="#tape">F4 HIGHLIGHTS</a>
         <a class="f5" href="#connect">F5 STEAM</a>
         <a class="f6" href="#merch">F6 MERCH</a>
+        <a class="f7" href="#wall">F7 COMMENTS</a>
       </nav>
 
       <main id="top">
@@ -183,6 +184,24 @@ LAUNCH         -NOVID -NOJOY -HIGH -FULLSCREEN</pre>
               <figcaption>PRINT // DUAL COBRA<br />$25  —  DROP SOON</figcaption>
             </figure>
           </div>
+        </section>
+
+        <section class="panel" id="wall">
+          <h2>F7  WALL.TXT</h2>
+          <p class="dim">LEAVE A MARK. STAY ANON OR CREATE A HANDLE. PUBLIC POSTS HIT THE WALL AFTER YOU CONFIRM.</p>
+          <div id="wall-list" class="wall-list"></div>
+          <form id="wall-form" class="wall-form">
+            <fieldset>
+              <label><input type="radio" name="idmode" value="anon" checked /> REMAIN ANON</label>
+              <label><input type="radio" name="idmode" value="user" /> CREATE USERNAME</label>
+            </fieldset>
+            <input id="wall-name" type="text" maxlength="24" placeholder="USERNAME" autocomplete="nickname" disabled />
+            <textarea id="wall-text" maxlength="400" rows="4" placeholder="TRANSMIT MESSAGE..." required></textarea>
+            <p class="actions">
+              <button class="key key-green" type="submit">[ TRANSMIT ]</button>
+            </p>
+            <p id="wall-status" class="dim"></p>
+          </form>
         </section>
 
         <section class="panel" id="connect">

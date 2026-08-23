@@ -213,3 +213,104 @@ document.addEventListener("keydown", (event) => {
   if (event.key === "m" || event.key === "M") theme.toggle();
 });
 
+const wallList = document.getElementById("wall-list");
+const wallForm = document.getElementById("wall-form");
+const wallName = document.getElementById("wall-name");
+const wallText = document.getElementById("wall-text");
+const wallStatus = document.getElementById("wall-status");
+const LOCAL_KEY = "ls-wall";
+const HANDLE_KEY = "ls-handle";
+
+function stamp(ts) {
+  try { return new Date(ts).toISOString().replace("T", " ").slice(0, 16); }
+  catch (e) { return ""; }
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, (c) => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
+  }[c]));
+}
+
+function readLocal() {
+  try { return JSON.parse(localStorage.getItem(LOCAL_KEY) || "[]"); }
+  catch (e) { return []; }
+}
+
+function writeLocal(rows) {
+  localStorage.setItem(LOCAL_KEY, JSON.stringify(rows.slice(-80)));
+}
+
+function renderWall(rows) {
+  if (!wallList) return;
+  if (!rows.length) {
+    wallList.innerHTML = "<p class=\"dim\">NO TRANSMISSIONS YET.</p>";
+    return;
+  }
+  wallList.innerHTML = rows.slice().reverse().map((c) => `
+    <article class="wall-item${c.anon ? " anon" : ""}">
+      <div><span class="who">${escapeHtml(c.name)}</span><span class="when">${stamp(c.ts)}</span></div>
+      <p>${escapeHtml(c.text)}</p>
+    </article>
+  `).join("");
+}
+
+function mergeWall(a, b) {
+  const map = new Map();
+  [...a, ...b].forEach((c) => {
+    const key = `${c.ts}|${c.name}|${c.text}`;
+    map.set(key, c);
+  });
+  return [...map.values()].sort((x, y) => x.ts - y.ts);
+}
+
+async function loadWall() {
+  let remote = [];
+  try {
+    const r = await fetch(`comments.json?t=${Date.now()}`, { cache: "no-store" });
+    if (r.ok) {
+      const data = await r.json();
+      remote = Array.isArray(data.comments) ? data.comments : [];
+    }
+  } catch (e) { /* offline */ }
+  renderWall(mergeWall(remote, readLocal()));
+}
+
+wallForm?.addEventListener("change", () => {
+  const mode = wallForm.idmode.value;
+  if (wallName) {
+    wallName.disabled = mode !== "user";
+    if (mode === "user") {
+      wallName.value = localStorage.getItem(HANDLE_KEY) || wallName.value;
+      wallName.focus();
+    }
+  }
+});
+
+wallForm?.addEventListener("submit", (event) => {
+  event.preventDefault();
+  const anon = wallForm.idmode.value !== "user";
+  let name = anon ? "ANON" : (wallName.value || "").trim().replace(/[^\w\- ]/g, "").slice(0, 24);
+  const text = (wallText.value || "").trim().slice(0, 400);
+  if (!anon && name.length < 2) {
+    if (wallStatus) wallStatus.textContent = "USERNAME TOO SHORT.";
+    return;
+  }
+  if (!text) return;
+  if (!anon) localStorage.setItem(HANDLE_KEY, name);
+  const row = { name, anon, text, ts: Date.now() };
+  writeLocal(mergeWall(readLocal(), [row]));
+  wallText.value = "";
+  loadWall();
+  const title = `[COMMENT] ${name}`;
+  const url = `https://github.com/lethalsalt/lethalsalt.github.io/issues/new?labels=guestbook&title=${encodeURIComponent(title)}&body=${encodeURIComponent(text)}`;
+  window.open(url, "_blank", "noopener");
+  if (wallStatus) {
+    wallStatus.textContent = "LOCAL COPY SAVED. CONFIRM THE GITHUB WINDOW TO PUBLISH ON THE PUBLIC WALL. CANCEL IT TO STAY ON THIS DEVICE ONLY.";
+  }
+});
+
+loadWall();
+setInterval(loadWall, 45000);
+
+
