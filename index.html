@@ -41,8 +41,9 @@
         <a class="f1" href="#top">F1 ACCOUNT</a>
         <a class="f2" href="#player">F2 STATS</a>
         <a class="f3" href="#loadout">F3 LOADOUT</a>
-        <a class="f4" href="#tape">F4 TAPE</a>
+        <a class="f4" href="#tape">F4 HIGHLIGHTS</a>
         <a class="f5" href="#connect">F5 STEAM</a>
+        <a class="f6" href="#merch">F6 MERCH</a>
       </nav>
 
       <main id="top">
@@ -79,7 +80,18 @@
           <p class="actions">
             <a class="key key-green" href="#loadout">[ ENTER LOADOUT ]</a>
             <a class="key key-hell" href="https://steamcommunity.com/profiles/76561198651917859" target="_blank" rel="noopener">[ DISPENSE STEAM ]</a>
+            <button class="key key-yellow" id="audio-btn" type="button">[ AUDIO: OFF ]</button>
           </p>
+          <div class="armory">
+            <figure>
+              <img src="assets/cobra-dual.jpg" alt="Lethal_Salt dual cobra cyberpunk guns" />
+              <figcaption>ARMORY // COBRA DUAL</figcaption>
+            </figure>
+            <figure>
+              <img src="assets/cobra-sniper.jpg" alt="Lethal_Salt cobra sniper on a rooftop" />
+              <figcaption>ARMORY // FANG SNIPER</figcaption>
+            </figure>
+          </div>
         </section>
 
         <section class="panel" id="player">
@@ -136,20 +148,39 @@ LAUNCH         -NOVID -NOJOY -HIGH -FULLSCREEN</pre>
         </section>
 
         <section class="panel" id="tape">
-          <h2>F4  TAPE.LOG</h2>
-          <p class="dim">HIGHLIGHTS PENDING. BUFFERING FROM 1995.</p>
-          <div class="frames">
+          <h2>F4  HIGHLIGHTS.MOV</h2>
+          <p class="dim">LETHAL_SALT // WARZONE TRICKSHOT REEL. ORIGINAL DROPS. NO HUD. NO MERCY.</p>
+          <div class="clips">
             <figure>
-              <img src="assets/banner.jpg" alt="Salt crate in an alley" />
-              <figcaption>01 MID CONTROL, EMOTIONALLY</figcaption>
+              <video src="assets/clip-roof.mp4" poster="assets/shot-roof.jpg" autoplay muted loop playsinline></video>
+              <figcaption>01 ROOFTOP QUICKSCOPE</figcaption>
             </figure>
             <figure>
-              <img src="assets/texture.jpg" alt="Red stripe and salt crystals" />
-              <figcaption>02 JERSEY STRIPE</figcaption>
+              <video src="assets/clip-360.mp4" poster="assets/shot-360.jpg" autoplay muted loop playsinline></video>
+              <figcaption>02 360 SALT SPIN</figcaption>
             </figure>
             <figure>
-              <img src="assets/hero.jpg" alt="Salt shaker on the arena floor" />
-              <figcaption>03 CLUTCH VS THE iGPU</figcaption>
+              <video src="assets/clip-slide.mp4" poster="assets/shot-slide.jpg" autoplay muted loop playsinline></video>
+              <figcaption>03 CORNER SLIDE</figcaption>
+            </figure>
+          </div>
+        </section>
+
+        <section class="panel" id="merch">
+          <h2>F6  MERCH.DIR</h2>
+          <p class="dim">ARMORY DROP. NOT A CHECKOUT. WAVE 01 LOCKED FOR GALLERIA.</p>
+          <div class="merch">
+            <figure>
+              <img src="assets/merch-tee.jpg" alt="Lethal_Salt cobra t-shirt" />
+              <figcaption>TEE // COBRA SALT<br />$40  —  DROP SOON</figcaption>
+            </figure>
+            <figure>
+              <img src="assets/merch-cap.jpg" alt="Lethal_Salt cap and patch" />
+              <figcaption>CAP + PATCH // FANG<br />$28  —  DROP SOON</figcaption>
+            </figure>
+            <figure>
+              <img src="assets/cobra-dual.jpg" alt="Cobra dual gun print" />
+              <figcaption>PRINT // DUAL COBRA<br />$25  —  DROP SOON</figcaption>
             </figure>
           </div>
         </section>

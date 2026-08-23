@@ -105,6 +105,10 @@ a:hover { color: #fff; background: var(--dim); }
 .menu .f3 { color: var(--payne); }
 .menu .f4 { color: var(--ember); }
 .menu .f5 { color: var(--hell); }
+.menu .f6 { color: #d07cff; }
+.key-yellow { border-color: var(--payne); color: var(--payne); }
+.key-yellow:hover { background: var(--payne); color: #140f00; }
+button.key { cursor: pointer; background: transparent; font: inherit; }
 .tray {
   border-bottom: 0;
   border-top: 1px solid var(--dim);
@@ -293,13 +297,29 @@ figcaption {
   letter-spacing: 0.06em;
 }
 
-.frames {
+.frames,
+.clips,
+.merch,
+.armory {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 12px;
   margin-top: 12px;
 }
-.frames img { height: 160px; }
+.armory { grid-template-columns: 1fr 1fr; }
+.frames img,
+.armory img,
+.merch img,
+.clips video {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  display: block;
+  border: 1px solid var(--dim);
+}
+.armory img { height: 240px; filter: none; mix-blend-mode: normal; }
+.clips video { background: #000; height: 180px; }
+.merch img { height: 260px; filter: none; mix-blend-mode: normal; }
 
 .boot {
   position: absolute;
@@ -313,7 +333,7 @@ figcaption {
 
 @media (max-width: 720px) {
   .chassis { margin: 0; border: 0; padding: 10px; }
-  .split, .frames, .codec, .hud { grid-template-columns: 1fr; }
+  .split, .frames, .clips, .merch, .armory, .codec, .hud { grid-template-columns: 1fr; }
   .menu { font-size: 12px; }
   h1 { font-size: 64px; }
 }
